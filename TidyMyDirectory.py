@@ -21,15 +21,20 @@ def sort_by_ext(path):
 
     return files
 
+def _rename_reqequence():
+    pass
 
-def rename_sequence():
+def rename_resequence():
     path = QFileDialog.getExistingDirectory()
     os.chdir(path)
 
     files = sort_by_ext(path)
 
-    png_ext_count = 0
-    jpg_ext_count = 0
+    # wtf...
+    prod_png_count = 0
+    prod_jpg_count = 0
+    weta_png_count = 0
+    weta_jpg_count = 0
 
     for count, f in enumerate(files):
 
@@ -41,50 +46,49 @@ def rename_sequence():
         if f_name.lower() == "weta":
             if f_ext == ".png":
 
-                png_ext_count += 1
+                weta_png_count += 1
 
-                if png_ext_count < 10:
+                if weta_png_count < 10:
                     # zero-pad sequence
-                    f_name = "weta." + str(png_ext_count).zfill(2)
+                    f_name = "weta." + str(weta_png_count).zfill(2)
                 else:
-                    f_name = "weta." + str(png_ext_count)
+                    f_name = "weta." + str(weta_png_count)
 
             elif f_ext == ".jpg":
+                weta_jpg_count += 1
 
-                jpg_ext_count += 1
-
-                if jpg_ext_count < 10:
+                if weta_jpg_count < 10:
                     # zero-pad sequence
-                    f_name = "weta." + str(jpg_ext_count).zfill(2)
+                    f_name = "weta." + str(weta_jpg_count).zfill(2)
                 else:
-                    f_name = "weta." + str(jpg_ext_count)
+                    f_name = "weta." + str(weta_jpg_count)
 
             new_name = f'{f_name}{f_ext}'
             print(new_name)
             os.rename(f, new_name)
 
         elif f_name.lower() == "prodeng":
+
             if f_ext == ".png":
 
-                # reset counter then increment
-                png_ext_count += 1
+                prod_png_count += 1
 
-                if png_ext_count < 10:
+                if prod_png_count < 10:
                     # zero-pad sequence
-                    f_name = "prodeng." + str(png_ext_count).zfill(2)
+                    f_name = "prodeng." + str(prod_png_count).zfill(2)
                 else:
-                    f_name = "prodeng." + str(png_ext_count)
+                    f_name = "prodeng." + str(prod_png_count)
 
             elif f_ext == ".jpg":
 
                 # reset counter then increment
-                jpg_ext_count += 1
+                prod_jpg_count += 1
 
-                if jpg_ext_count < 10:
+                if prod_jpg_count < 10:
                     # zero-pad sequence
-                    f_name = "prodeng." + str(jpg_ext_count).zfill(2)
+                    f_name = "prodeng." + str(prod_jpg_count).zfill(2)
                 else:
-                    f_name = "prodeng." + str(jpg_ext_count)
+                    f_name = "prodeng." + str(prod_jpg_count)
 
             new_name = f'{f_name}{f_ext}'
 
@@ -116,16 +120,6 @@ class TidyMyDirectory(QWidget):
 
         QToolTip.setFont(QtGui.QFont('OpenSans', 10))
 
-        # self.setToolTip('This is a <b>QWidget</b> widget')
-
-        # EditText Field
-        labelProjectName = QLabel('Project Name:', self)
-        labelProjectName.move(15, 10)
-
-        self.etProjectName = QLineEdit('', self)
-        self.etProjectName.resize(self.etProjectName.sizeHint())
-        self.etProjectName.move(90, 7)
-
         # Folder Browser
         lbBroswer = QLabel('Directory:', self)
         lbBroswer.move(15, 40)
@@ -136,18 +130,18 @@ class TidyMyDirectory(QWidget):
         self.etBrowser.setEnabled(0)
         # self.etBrowser.isReadOnly = 0
 
-        btnBrowse = QPushButton('Browse', self)
-        btnBrowse.setToolTip('Select directory')
-        btnBrowse.resize(btnBrowse.sizeHint())
-        btnBrowse.move(305, 37)
-        btnBrowse.clicked.connect(selected_directory)
+        # btnBrowse = QPushButton('Browse', self)
+        # btnBrowse.setToolTip('Select directory')
+        # btnBrowse.resize(btnBrowse.sizeHint())
+        # btnBrowse.move(305, 37)
+        # btnBrowse.clicked.connect(selected_directory)
 
         # Button UI
         btn = QPushButton('Clean up', self)
         btn.setToolTip('This will tidy up your directory.')
         btn.resize(btn.sizeHint())
         btn.move(5, 60)
-        btn.clicked.connect(rename_sequence)
+        btn.clicked.connect(rename_resequence)
 
         self.setFixedSize(900, 600)
         self.center_window()
