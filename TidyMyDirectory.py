@@ -2,12 +2,57 @@ import os
 import sys
 
 from PySide2 import QtGui
-from PySide2.QtWidgets import QDesktopWidget, QApplication, QLineEdit, QLabel, QWidget, QToolTip, \
-    QPushButton, QMessageBox, QFileDialog
+from PySide2.QtWidgets import (
+    QDesktopWidget,
+    QApplication,
+    QLineEdit,
+    QLabel,
+    QWidget,
+    QToolTip,
+    QPushButton,
+    QMessageBox,
+    QFileDialog,
+    QInputDialog,
+    QListView,
+    QListWidget,
+    QDialog,
+    QMainWindow,
+    QDialogButtonBox,
+    QVBoxLayout, QListWidgetItem
+)
+
+
+class CustomDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.setWindowTitle("Renaming these folders")
+
+        QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+
+        self.buttonBox = QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        path = selected_directory()
+
+        list = QListWidget()
+
+        files = [f for f in os.listdir(path)]
+
+        for count, f in enumerate(files):
+            QListWidgetItem(f, list)
+
+        self.layout = QVBoxLayout()
+        message = QLabel("These folders will be renamed, is that okay?")
+
+        self.layout.addWidget(message)
+        self.layout.addWidget(list)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
 
 
 def selected_directory():
-    print("selected directory: " + QFileDialog.getExistingDirectory())
     return QFileDialog.getExistingDirectory()
 
 
@@ -34,7 +79,6 @@ def rename_resequence():
 
     files = sort_by_ext(path)
 
-    # wtf...
     prod_png_count = 0
     prod_jpg_count = 0
     weta_png_count = 0
@@ -45,7 +89,7 @@ def rename_resequence():
         f_fullname, f_ext = os.path.splitext(f)
 
         # split file name and number
-        f_name, f_num = f_fullname.split(".")
+        f_name, _f_num = f_fullname.split(".")
 
         if f_name.lower() == "weta":
             if f_ext == ".png":
@@ -58,7 +102,7 @@ def rename_resequence():
                 f_name = renamed_file(f_name, weta_jpg_count)
 
             new_name = f'{f_name}{f_ext}'
-            print(new_name)
+            print(f"Renaming " + f + " to " + new_name)
             os.rename(f, new_name)
 
         elif f_name.lower() == "prodeng":
@@ -71,13 +115,24 @@ def rename_resequence():
                 f_name = renamed_file(f_name, prod_jpg_count)
 
             new_name = f'{f_name}{f_ext}'
-            print(new_name)
+            # print(new_name)
+            print(f"Renaming " + f + " to " + new_name)
             os.rename(f, new_name)
 
     print("success")
 
 
-class TidyMyDirectory(QWidget):
+def confirmation(s):
+    print("click", s)
+
+    dlg = CustomDialog()
+    if dlg.exec_():
+        print("Success!")
+    else:
+        print("Cancel!")
+
+
+class TidyMyDirectory(QMainWindow):
 
     def __init__(self):
         super(TidyMyDirectory, self).__init__()
@@ -105,7 +160,6 @@ class TidyMyDirectory(QWidget):
         self.etBrowser.resize(210, 20)
         self.etBrowser.move(90, 37)
         self.etBrowser.setEnabled(0)
-        self.etBrowser.isReadOnly = 0
 
         btnBrowse = QPushButton('Browse', self)
         btnBrowse.setToolTip('Select directory')
@@ -119,6 +173,11 @@ class TidyMyDirectory(QWidget):
         btn.resize(btn.sizeHint())
         btn.move(5, 60)
         btn.clicked.connect(rename_resequence)
+
+        button = QPushButton("Press me for a dialog!", self)
+        button.resize(button.sizeHint())
+        button.move(30, 160)
+        button.clicked.connect(confirmation)
 
         self.setFixedSize(900, 600)
         self.center_window()
