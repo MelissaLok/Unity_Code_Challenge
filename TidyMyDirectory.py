@@ -38,7 +38,32 @@ def rename_sequence():
         # split file name and number
         f_name, f_num = f_fullname.split(".")
 
-        if f_name.lower() == "prodeng":
+        if f_name.lower() == "weta":
+            if f_ext == ".png":
+
+                png_ext_count += 1
+
+                if png_ext_count < 10:
+                    # zero-pad sequence
+                    f_name = "weta." + str(png_ext_count).zfill(2)
+                else:
+                    f_name = "weta." + str(png_ext_count)
+
+            elif f_ext == ".jpg":
+
+                jpg_ext_count += 1
+
+                if jpg_ext_count < 10:
+                    # zero-pad sequence
+                    f_name = "weta." + str(jpg_ext_count).zfill(2)
+                else:
+                    f_name = "weta." + str(jpg_ext_count)
+
+            new_name = f'{f_name}{f_ext}'
+            print(new_name)
+            os.rename(f, new_name)
+
+        elif f_name.lower() == "prodeng":
             if f_ext == ".png":
 
                 # reset counter then increment
@@ -65,6 +90,8 @@ def rename_sequence():
 
             print(new_name)
             os.rename(f, new_name)
+
+        # reset counter
 
     print("success")
 
