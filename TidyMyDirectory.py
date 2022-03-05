@@ -1,6 +1,4 @@
-import glob
 import os
-import re
 import sys
 
 from PySide2 import QtGui
@@ -21,8 +19,14 @@ def sort_by_ext(path):
 
     return files
 
-def _rename_reqequence():
-    pass
+
+def renamed_file(name, count):
+    if count < 10:
+        # zero-pad sequence
+        return name + "." + str(count).zfill(2)
+    else:
+        return name + "." + str(count)
+
 
 def rename_resequence():
     path = QFileDialog.getExistingDirectory()
@@ -47,55 +51,28 @@ def rename_resequence():
             if f_ext == ".png":
 
                 weta_png_count += 1
-
-                if weta_png_count < 10:
-                    # zero-pad sequence
-                    f_name = "weta." + str(weta_png_count).zfill(2)
-                else:
-                    f_name = "weta." + str(weta_png_count)
+                f_name = renamed_file(f_name, weta_png_count)
 
             elif f_ext == ".jpg":
                 weta_jpg_count += 1
-
-                if weta_jpg_count < 10:
-                    # zero-pad sequence
-                    f_name = "weta." + str(weta_jpg_count).zfill(2)
-                else:
-                    f_name = "weta." + str(weta_jpg_count)
+                f_name = renamed_file(f_name, weta_jpg_count)
 
             new_name = f'{f_name}{f_ext}'
             print(new_name)
             os.rename(f, new_name)
 
         elif f_name.lower() == "prodeng":
-
             if f_ext == ".png":
-
                 prod_png_count += 1
-
-                if prod_png_count < 10:
-                    # zero-pad sequence
-                    f_name = "prodeng." + str(prod_png_count).zfill(2)
-                else:
-                    f_name = "prodeng." + str(prod_png_count)
+                f_name = renamed_file(f_name, prod_png_count)
 
             elif f_ext == ".jpg":
-
-                # reset counter then increment
                 prod_jpg_count += 1
-
-                if prod_jpg_count < 10:
-                    # zero-pad sequence
-                    f_name = "prodeng." + str(prod_jpg_count).zfill(2)
-                else:
-                    f_name = "prodeng." + str(prod_jpg_count)
+                f_name = renamed_file(f_name, prod_jpg_count)
 
             new_name = f'{f_name}{f_ext}'
-
             print(new_name)
             os.rename(f, new_name)
-
-        # reset counter
 
     print("success")
 
@@ -121,20 +98,20 @@ class TidyMyDirectory(QWidget):
         QToolTip.setFont(QtGui.QFont('OpenSans', 10))
 
         # Folder Browser
-        lbBroswer = QLabel('Directory:', self)
-        lbBroswer.move(15, 40)
+        directory_label = QLabel('Directory:', self)
+        directory_label.move(15, 40)
 
         self.etBrowser = QLineEdit('', self)
         self.etBrowser.resize(210, 20)
         self.etBrowser.move(90, 37)
         self.etBrowser.setEnabled(0)
-        # self.etBrowser.isReadOnly = 0
+        self.etBrowser.isReadOnly = 0
 
-        # btnBrowse = QPushButton('Browse', self)
-        # btnBrowse.setToolTip('Select directory')
-        # btnBrowse.resize(btnBrowse.sizeHint())
-        # btnBrowse.move(305, 37)
-        # btnBrowse.clicked.connect(selected_directory)
+        btnBrowse = QPushButton('Browse', self)
+        btnBrowse.setToolTip('Select directory')
+        btnBrowse.resize(btnBrowse.sizeHint())
+        btnBrowse.move(305, 37)
+        btnBrowse.clicked.connect(selected_directory)
 
         # Button UI
         btn = QPushButton('Clean up', self)
