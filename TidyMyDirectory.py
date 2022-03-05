@@ -44,8 +44,10 @@ class CustomDialog(QDialog):
             QListWidgetItem(f, list)
 
         self.layout = QVBoxLayout()
+        folder = QLabel("Current folder: " + path)
         message = QLabel("These folders will be renamed, is that okay?")
 
+        self.layout.addWidget(folder)
         self.layout.addWidget(message)
         self.layout.addWidget(list)
         self.layout.addWidget(self.buttonBox)
@@ -119,15 +121,14 @@ def rename_resequence():
             print(f"Renaming " + f + " to " + new_name)
             os.rename(f, new_name)
 
-    print("success")
-
 
 def confirmation(s):
     print("click", s)
 
     dlg = CustomDialog()
     if dlg.exec_():
-        print("Success!")
+        rename_resequence()
+        print('Success!')
     else:
         print("Cancel!")
 
@@ -152,29 +153,7 @@ class TidyMyDirectory(QMainWindow):
 
         QToolTip.setFont(QtGui.QFont('OpenSans', 10))
 
-        # Folder Browser
-        directory_label = QLabel('Directory:', self)
-        directory_label.move(15, 40)
-
-        self.etBrowser = QLineEdit('', self)
-        self.etBrowser.resize(210, 20)
-        self.etBrowser.move(90, 37)
-        self.etBrowser.setEnabled(0)
-
-        btnBrowse = QPushButton('Browse', self)
-        btnBrowse.setToolTip('Select directory')
-        btnBrowse.resize(btnBrowse.sizeHint())
-        btnBrowse.move(305, 37)
-        btnBrowse.clicked.connect(selected_directory)
-
-        # Button UI
-        btn = QPushButton('Clean up', self)
-        btn.setToolTip('This will tidy up your directory.')
-        btn.resize(btn.sizeHint())
-        btn.move(5, 60)
-        btn.clicked.connect(rename_resequence)
-
-        button = QPushButton("Press me for a dialog!", self)
+        button = QPushButton("Browse folders", self)
         button.resize(button.sizeHint())
         button.move(30, 160)
         button.clicked.connect(confirmation)
