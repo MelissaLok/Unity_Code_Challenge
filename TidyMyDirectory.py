@@ -5,20 +5,17 @@ from PySide2 import QtGui
 from PySide2.QtWidgets import (
     QDesktopWidget,
     QApplication,
-    QLineEdit,
     QLabel,
-    QWidget,
     QToolTip,
     QPushButton,
     QMessageBox,
     QFileDialog,
-    QInputDialog,
-    QListView,
     QListWidget,
     QDialog,
     QMainWindow,
     QDialogButtonBox,
-    QVBoxLayout, QListWidgetItem
+    QVBoxLayout,
+    QListWidgetItem
 )
 
 
@@ -36,20 +33,20 @@ class CustomDialog(QDialog):
 
         path = selected_directory()
 
-        list = QListWidget()
+        list_of_files = QListWidget()
 
         files = [f for f in os.listdir(path)]
 
         for count, f in enumerate(files):
-            QListWidgetItem(f, list)
+            QListWidgetItem(f, list_of_files)
 
         self.layout = QVBoxLayout()
-        folder = QLabel("Current folder: " + path)
-        message = QLabel("These folders will be renamed, is that okay?")
+        folder = QLabel("Chosen Directory: " + path)
+        message = QLabel("\nThese folders will be renamed sequentially by extension, is that okay?")
 
         self.layout.addWidget(folder)
         self.layout.addWidget(message)
-        self.layout.addWidget(list)
+        self.layout.addWidget(list_of_files)
         self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
 
@@ -117,20 +114,8 @@ def rename_resequence():
                 f_name = renamed_file(f_name, prod_jpg_count)
 
             new_name = f'{f_name}{f_ext}'
-            # print(new_name)
             print(f"Renaming " + f + " to " + new_name)
             os.rename(f, new_name)
-
-
-def confirmation(s):
-    print("click", s)
-
-    dlg = CustomDialog()
-    if dlg.exec_():
-        rename_resequence()
-        print('Success!')
-    else:
-        print("Cancel!")
 
 
 class TidyMyDirectory(QMainWindow):
@@ -139,6 +124,19 @@ class TidyMyDirectory(QMainWindow):
         super(TidyMyDirectory, self).__init__()
 
         self.setup()
+
+    def setup(self):
+
+        browse_button = QPushButton("Browse folders", self)
+        browse_button.resize(browse_button.sizeHint())
+        browse_button.move(400, 300)
+        browse_button.clicked.connect(self.button_clicked)
+
+        self.setFixedSize(900, 600)
+        self.center_window()
+
+        self.setWindowTitle('Tidy my Directory!')
+        self.show()
 
     def closeEvent(self, event: QtGui.QCloseEvent):
         action = QMessageBox.question(self, "Exiting Tidy my Directory", "Are you sure you want to quit?",
@@ -149,20 +147,15 @@ class TidyMyDirectory(QMainWindow):
         else:
             event.ignore()
 
-    def setup(self):
+    def button_clicked(self):
+        dlg = CustomDialog(self)
+        button = dlg.exec_()
 
-        QToolTip.setFont(QtGui.QFont('OpenSans', 10))
-
-        button = QPushButton("Browse folders", self)
-        button.resize(button.sizeHint())
-        button.move(30, 160)
-        button.clicked.connect(confirmation)
-
-        self.setFixedSize(900, 600)
-        self.center_window()
-
-        self.setWindowTitle('Tidy my Directory!')
-        self.show()
+        if button == 1: # 1 = QDialogBox.Ok
+            rename_resequence()
+            print("success")
+        else:
+            print("cancelled")
 
     def center_window(self):
 
