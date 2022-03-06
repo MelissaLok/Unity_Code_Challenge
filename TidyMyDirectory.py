@@ -118,7 +118,7 @@ def rename_resequence():
                 print(f"Renaming " + f + " to " + new_name)
                 os.rename(f, new_name)
 
-            #  skip all other files
+            #  skip other files
             else:
                 continue
 
@@ -160,9 +160,9 @@ class TidyMyDirectory(QMainWindow):
 
         # Info Icon + instructions
         info = QLabel(self)
-        help_icon = QPixmap('info.png')
+        info_icon = QPixmap('info.png')
         info.move(10, 0)
-        info.setPixmap(help_icon)
+        info.setPixmap(info_icon)
         info.resize(60, 80)
         info.setStyleSheet(styles)
         info.setToolTip(steps)
@@ -205,7 +205,6 @@ class TidyMyDirectory(QMainWindow):
             print("function has finished running")
         else:
             print("cancelled")
-
 
     # def processing_timer(self):
     #     self.completed = 0
