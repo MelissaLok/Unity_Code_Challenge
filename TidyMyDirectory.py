@@ -145,17 +145,15 @@ class TidyMyDirectory(QMainWindow):
         logo.resize(logo.sizeHint())
         logo.move(183, 110)
 
+        steps = "To use this program: \n 1. Choose a folder you want to tidy up\n 2. Select OK once you've chosen the " \
+                "your folder \n 3. Once you click Ok, the program will immediately clean up your directory! :) "
+
+        styles = "font-size: 15px;" + "font-weight: bold;" + "color: '#36B0CB'; "
+
         instructions = QLabel("Hover for instructions", self)
         instructions.resize(300, 50)
-        instructions.setStyleSheet(
-            "font-size: 15px;" +
-            "font-weight: bold;" +
-            "color: '#36B0CB'; }"
-        )
-        instructions.setToolTip(
-            "To use this program: \n 1. Choose a folder you want to tidy up\n 2. Select OK once you've "
-            "chosen the your folder \n 3. Once you click Ok, the program will immediately clean up your "
-            "directory! :)")
+        instructions.setStyleSheet(styles)
+        instructions.setToolTip(steps)
 
         instructions.move(80, 15)
 
@@ -165,29 +163,21 @@ class TidyMyDirectory(QMainWindow):
         info.move(10, 0)
         info.setPixmap(help_icon)
         info.resize(60, 80)
-        info.setStyleSheet(
-            "font-size: 15px;" +
-            "font-weight: bold;" +
-            "color: '#36B0CB'; }"
-        )
-        info.setToolTip("To use this program: \n 1. Choose a folder you want to tidy up\n 2. Select OK once you've "
-                        "chosen the your folder \n 3. Once you click Ok, the program will immediately clean up your "
-                        "directory! :)")
+        info.setStyleSheet(styles)
+        info.setToolTip(steps)
 
         # Button UI
         browse_button = QPushButton("Choose a folder to tidy up", self)
-        browse_button.move(80, 230)
-        browse_button.resize(750, 270)
+        browse_button.move(250, 270)
+        browse_button.resize(400, 80)
         browse_button.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
         browse_button.setStyleSheet(
             "*{ background-color: '#36B0CB';" +
-            "border-radius: 35px;" +
+            "border-radius: 40px;" +
             "font-size: 20px;" +
-            "font-weight: 2px;" +
-            "color: 'white';" +
-            "padding: 10px 0px;" +
-            "margin: 100px 200px; }" +
-            "*:hover{background: '#36A2BB'; }"
+            "font-weight: bold;" +
+            "color: 'white'; }" +
+            "*:hover{background: '#129FBE'; }"
         )
         browse_button.clicked.connect(self.button_clicked)
 
@@ -208,7 +198,6 @@ class TidyMyDirectory(QMainWindow):
         button = dlg.exec_()
 
         if button == 1:  # 1 = QDialogBox.Ok
-
             rename_resequence()
             print("function has finished running")
         else:
@@ -218,8 +207,8 @@ class TidyMyDirectory(QMainWindow):
 def main():
     app = QApplication(sys.argv)
 
-    GUI = TidyMyDirectory()
-    GUI.show()
+    gui = TidyMyDirectory()
+    gui.show()
 
     sys.exit(app.exec_())
 
