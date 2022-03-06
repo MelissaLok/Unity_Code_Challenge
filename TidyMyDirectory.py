@@ -14,7 +14,7 @@ from PySide2.QtWidgets import (
     QMainWindow,
     QDialogButtonBox,
     QVBoxLayout,
-    QListWidgetItem, QGridLayout
+    QListWidgetItem
 )
 
 
@@ -87,48 +87,42 @@ def rename_resequence():
         f_fullname, f_ext = os.path.splitext(f)
 
         # split file name and number
-        f_name, _f_num = f_fullname.split(".")
+        try:
+            f_name, _f_num = f_fullname.split(".")
 
-        if f_name.lower() == "weta":
-            if f_ext == ".png":
+            if f_name.lower() == "weta":
+                if f_ext == ".png":
 
-                weta_png_count += 1
-                f_name = renamed_file(f_name, weta_png_count)
+                    weta_png_count += 1
+                    f_name = renamed_file(f_name, weta_png_count)
 
-            elif f_ext == ".jpg":
-                weta_jpg_count += 1
-                f_name = renamed_file(f_name, weta_jpg_count)
+                elif f_ext == ".jpg":
+                    weta_jpg_count += 1
+                    f_name = renamed_file(f_name, weta_jpg_count)
 
-            new_name = f'{f_name}{f_ext}'
-            print(f"Renaming " + f + " to " + new_name)
-            os.rename(f, new_name)
+                new_name = f'{f_name}{f_ext}'
+                print(f"Renaming " + f + " to " + new_name)
+                os.rename(f, new_name)
 
-        elif f_name.lower() == "prodeng":
-            if f_ext == ".png":
-                prod_png_count += 1
-                f_name = renamed_file(f_name, prod_png_count)
+            elif f_name.lower() == "prodeng":
+                if f_ext == ".png":
+                    prod_png_count += 1
+                    f_name = renamed_file(f_name, prod_png_count)
 
-            elif f_ext == ".jpg":
-                prod_jpg_count += 1
-                f_name = renamed_file(f_name, prod_jpg_count)
+                elif f_ext == ".jpg":
+                    prod_jpg_count += 1
+                    f_name = renamed_file(f_name, prod_jpg_count)
 
-            new_name = f'{f_name}{f_ext}'
-            print(f"Renaming " + f + " to " + new_name)
-            os.rename(f, new_name)
+                new_name = f'{f_name}{f_ext}'
+                print(f"Renaming " + f + " to " + new_name)
+                os.rename(f, new_name)
 
-        #  todo: For all other names and extensions
-        else:
-            if f_ext == ".png":
-                prod_png_count += 1
-                f_name = renamed_file(f_name, prod_png_count)
+            #  skip all other files
+            else:
+                continue
 
-            elif f_ext == ".jpg":
-                prod_jpg_count += 1
-                f_name = renamed_file(f_name, prod_jpg_count)
-
-            new_name = f'{f_name}{f_ext}'
-            print(f"Renaming " + f + " to " + new_name)
-            os.rename(f, new_name)
+        except BaseException as e:
+            print("An error has occurred: {}".format(e))
 
 
 class TidyMyDirectory(QMainWindow):
@@ -150,6 +144,35 @@ class TidyMyDirectory(QMainWindow):
         logo.setPixmap(image)
         logo.resize(logo.sizeHint())
         logo.move(183, 110)
+
+        instructions = QLabel("Hover for instructions", self)
+        instructions.resize(300, 50)
+        instructions.setStyleSheet(
+            "font-size: 15px;" +
+            "font-weight: bold;" +
+            "color: '#36B0CB'; }"
+        )
+        instructions.setToolTip(
+            "To use this program: \n 1. Choose a folder you want to tidy up\n 2. Select OK once you've "
+            "chosen the your folder \n 3. Once you click Ok, the program will immediately clean up your "
+            "directory! :)")
+
+        instructions.move(80, 15)
+
+        # Info Icon + instructions
+        info = QLabel(self)
+        help_icon = QPixmap('info.png')
+        info.move(10, 0)
+        info.setPixmap(help_icon)
+        info.resize(60, 80)
+        info.setStyleSheet(
+            "font-size: 15px;" +
+            "font-weight: bold;" +
+            "color: '#36B0CB'; }"
+        )
+        info.setToolTip("To use this program: \n 1. Choose a folder you want to tidy up\n 2. Select OK once you've "
+                        "chosen the your folder \n 3. Once you click Ok, the program will immediately clean up your "
+                        "directory! :)")
 
         # Button UI
         browse_button = QPushButton("Choose a folder to tidy up", self)
@@ -179,13 +202,15 @@ class TidyMyDirectory(QMainWindow):
         else:
             event.ignore()
 
+    # todo: add logic for progress bar here
     def button_clicked(self):
         dlg = CustomDialog(self)
         button = dlg.exec_()
 
         if button == 1:  # 1 = QDialogBox.Ok
+
             rename_resequence()
-            print("success")
+            print("function has finished running")
         else:
             print("cancelled")
 
