@@ -98,6 +98,7 @@ def rename_resequence():
                     f_name = renamed_file(f_name, weta_png_count)
 
                 elif f_ext == ".jpg":
+                    
                     weta_jpg_count += 1
                     f_name = renamed_file(f_name, weta_jpg_count)
 
@@ -106,6 +107,7 @@ def rename_resequence():
                 os.rename(f, new_name)
 
             elif f_name.lower() == "prodeng":
+
                 if f_ext == ".png":
                     prod_png_count += 1
                     f_name = renamed_file(f_name, prod_png_count)
@@ -130,7 +132,6 @@ class TidyMyDirectory(QMainWindow):
 
     def __init__(self):
         super(TidyMyDirectory, self).__init__()
-
         self.setup()
 
     def setup(self):
@@ -155,7 +156,6 @@ class TidyMyDirectory(QMainWindow):
         instructions.resize(300, 50)
         instructions.setStyleSheet(styles)
         instructions.setToolTip(steps)
-
         instructions.move(80, 15)
 
         # Info Icon + instructions
