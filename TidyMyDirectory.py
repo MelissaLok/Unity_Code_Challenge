@@ -2,6 +2,7 @@ import os
 import sys
 
 from PySide2 import QtGui, QtCore
+# from PySide2.QtCore import QBasicTimer, Qt
 from PySide2.QtGui import QPixmap, QCursor, QIcon
 from PySide2.QtWidgets import (
     QApplication,
@@ -14,7 +15,8 @@ from PySide2.QtWidgets import (
     QMainWindow,
     QDialogButtonBox,
     QVBoxLayout,
-    QListWidgetItem
+    QListWidgetItem,
+    QProgressBar
 )
 
 
@@ -71,12 +73,11 @@ def renamed_file(name, count):
 
 
 def rename_resequence():
-    path = QFileDialog.getExistingDirectory()
+    path = selected_directory()
     os.chdir(path)
 
     files = sort_by_ext(path)
 
-    count = 0
     prod_png_count = 0
     prod_jpg_count = 0
     weta_png_count = 0
@@ -168,7 +169,7 @@ class TidyMyDirectory(QMainWindow):
 
         # Button UI
         browse_button = QPushButton("Choose a folder to tidy up", self)
-        browse_button.move(250, 270)
+        browse_button.move(250, 300)
         browse_button.resize(400, 80)
         browse_button.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
         browse_button.setStyleSheet(
@@ -194,14 +195,24 @@ class TidyMyDirectory(QMainWindow):
 
     # todo: add logic for progress bar here
     def button_clicked(self):
-        dlg = CustomDialog(self)
-        button = dlg.exec_()
 
-        if button == 1:  # 1 = QDialogBox.Ok
+        # progress = QProgressBar(self)
+        # popup = QDialog(self)
+        # popup.setWindowTitle("Processing images")
+
+        if CustomDialog(self).exec_() == 1:  # 1 = accepted / OK
             rename_resequence()
             print("function has finished running")
         else:
             print("cancelled")
+
+
+    # def processing_timer(self):
+    #     self.completed = 0
+    #
+    #     while self.completed < 100:
+    #         self.completed += 0.0001
+    #         self.progress.setValue(self.completed)
 
 
 def main():
